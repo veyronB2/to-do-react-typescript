@@ -124,6 +124,7 @@ ul {
   border: none;
   padding: 0.5rem 1rem;
   font-size: 1.1rem;
+  outline: none;
 }
 
 .todo-checkbox {
@@ -147,4 +148,8 @@ ul {
   text-transform: uppercase;
   background-color: var(--primary-red);
   color: var(--primary-white);
+}
+
+.todo-active {
+  border: 2px solid var(--primary-blue);
 }

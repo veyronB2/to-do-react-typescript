@@ -5,7 +5,12 @@ export type InputProps = {
   className: string;
   inputValue?: string;
   placeHolder?: string;
+  inputDisabled?: boolean;
+  reference?: React.LegacyRef<HTMLInputElement>;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 
 function Input({
@@ -14,22 +19,23 @@ function Input({
   placeHolder,
   onChange,
   inputValue,
+  inputDisabled,
+  reference,
+  onFocus,
+  onBlur,
 }: InputProps) {
-  const test = true;
-
-  function func(e: React.KeyboardEvent<HTMLInputElement>) {
-    e.preventDefault();
-  }
-
   return (
     <>
       <input
+        ref={reference}
         type={inputType}
         className={className}
         placeholder={placeHolder}
         defaultValue={inputValue}
         onChange={onChange}
-        onKeyDown={test ? func : undefined}
+        disabled={inputDisabled}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
     </>
   );

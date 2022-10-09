@@ -6,13 +6,13 @@ type checkboxProps = {
   isDisabled?: boolean;
 };
 
-function Checkbox({ className, onClick }: checkboxProps) {
+function Checkbox({ className, onClick, isDisabled }: checkboxProps) {
   return (
     <input
       type="checkbox"
       className={className}
       onClick={onClick}
-      disabled={false}
+      disabled={isDisabled}
     />
   );
 }

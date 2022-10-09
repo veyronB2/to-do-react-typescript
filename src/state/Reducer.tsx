@@ -10,8 +10,36 @@ export const reducer = (state: UIState, action: Action): UIState => {
     [ActionType.ADD_TODO]: addNewToDo,
     [ActionType.DELETE_TODO]: deleteToDo,
     [ActionType.COMPLETE_TODO]: toggleCompleted,
+    [ActionType.UPDATE_TODO_TEXT]: updateTODOtext,
+    [ActionType.UPDATE_EDIT_STATUS]: updateEditState,
   };
   return actionsMap[action.type] ? actionsMap[action.type]() : state;
+
+  function updateEditState() {
+    return {
+      ...state,
+      todoList: {
+        ...state.todoList,
+        [`${payload?.itemKeyValue}`]: {
+          ...state.todoList[`${payload?.itemKeyValue}`],
+          isInEditMode: payload?.isInEditMode,
+          toDoItemText: payload?.todo,
+        },
+      },
+    };
+  }
+
+  function updateTODOtext() {
+    return {
+      ...state,
+      todoList: {
+        ...state.todoList,
+        [`${payload?.itemKeyValue}`]: {
+          toDoItemText: payload?.todo,
+        },
+      },
+    };
+  }
 
   function addNewToDo() {
     return {

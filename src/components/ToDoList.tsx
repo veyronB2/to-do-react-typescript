@@ -5,17 +5,41 @@ import Checkbox from "./Checkbox";
 
 type ToDoListProps = {
   todoList: { [key: string]: ToDoState };
+  reference: any;
+  onInputDefocus: (
+    e: React.FocusEvent<HTMLInputElement>,
+    itemKey?: string
+  ) => void;
+
+  onInputFocus: (
+    e: React.FocusEvent<HTMLInputElement>,
+    itemKey?: string
+  ) => void;
   onButtonClick: (
     e?: React.MouseEvent<HTMLButtonElement>,
     itemKey?: string
   ) => void;
+
   onCheckBoxClick: (
     e: React.MouseEvent<HTMLInputElement>,
     itemKey: string
   ) => void;
+
+  onInputChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    itemKey: string
+  ) => void;
 };
 
-function ToDoList({ todoList, onButtonClick, onCheckBoxClick }: ToDoListProps) {
+function ToDoList({
+  todoList,
+  onButtonClick,
+  onCheckBoxClick,
+  onInputChange,
+  reference,
+  onInputFocus,
+  onInputDefocus,
+}: ToDoListProps) {
   return (
     <ul className="todo-list">
       {Object.keys(todoList).length === 0 ? (
@@ -35,25 +59,51 @@ function ToDoList({ todoList, onButtonClick, onCheckBoxClick }: ToDoListProps) {
             ) {
               onCheckBoxClick(e, key);
             }
+            function onInputChangeHandler(
+              e: React.ChangeEvent<HTMLInputElement>
+            ) {
+              onInputChange(e, key);
+            }
+            function inputFocusHandler(e: React.FocusEvent<HTMLInputElement>) {
+              onInputFocus(e, key);
+            }
+            function inputDefocusHandler(
+              e: React.FocusEvent<HTMLInputElement>
+            ) {
+              onInputDefocus(e, key);
+            }
 
             return (
               <li key={key} className="todo-item">
                 <Checkbox
                   className="todo-checkbox"
                   onClick={checkBoxClickHandler}
+                  isDisabled={isInEditMode ? true : false}
                 />
                 <Input
+                  reference={reference}
                   inputType="text"
                   className={
-                    isCompleted ? "todo-input todo-completed" : "todo-input"
+                    isCompleted
+                      ? "todo-input todo-completed"
+                      : isInEditMode
+                      ? "todo-input todo-active"
+                      : "todo-input"
                   }
                   inputValue={toDoItemText}
+                  inputDisabled={isCompleted ? true : false}
+                  onChange={onInputChangeHandler}
+                  onFocus={inputFocusHandler}
+                  onBlur={inputDefocusHandler}
                 />
-                <Button
-                  className="todo-btn"
-                  btnText={isInEditMode ? "Save" : "Delete"}
-                  onClick={buttonClickHandler}
-                />
+                {isInEditMode && <Button className="todo-btn" btnText="Save" />}
+                {!isInEditMode && (
+                  <Button
+                    className="todo-btn"
+                    btnText="Delete"
+                    onClick={buttonClickHandler}
+                  />
+                )}
               </li>
             );
           })}

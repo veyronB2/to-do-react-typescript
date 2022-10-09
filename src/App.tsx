@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import ToDoForm from "./components/ToDoForm";
 import { INITIAL_STATE } from "./state/IninitalState";
 import ToDoList from "./components/ToDoList";
@@ -24,6 +25,7 @@ function App() {
   const [formInputValue, setformInputValue] = useState<string>("");
   const [itemKeyValue, setitemKeyValue] = useState<string>("");
   const { todoList } = state;
+  const inputRef = useRef<React.LegacyRef<HTMLInputElement>>(null);
 
   function formOnSubmitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -46,15 +48,13 @@ function App() {
     setformInputValue(e.target.value);
   }
 
-  function deleteOrUpdateToDoItem(
+  function deleteTODOitem(
     e?: React.MouseEvent<HTMLButtonElement>,
     itemKey?: string
   ) {
-    const { isInEditMode } = state.todoList[itemKey!];
+    const btnText = (e?.target as HTMLButtonElement).textContent;
 
-    if (isInEditMode) {
-      console.log("being edited");
-    } else {
+    if (btnText?.toLocaleLowerCase() === "delete") {
       dispatch({
         type: ActionType.DELETE_TODO,
         payload: { itemKeyValue: itemKey },
@@ -79,6 +79,50 @@ function App() {
     });
   }
 
+  function todoOnInputChange(
+    e: React.ChangeEvent<HTMLInputElement>,
+    itemKey: string
+  ) {
+    const updatedTODOtext = (e.target as HTMLInputElement).value;
+
+    // dispatch({
+    //   type: ActionType.UPDATE_TODO_TEXT,
+    //   payload: {
+    //     todo: updatedTODOtext,
+    //     itemKeyValue: itemKey,
+    //     isInEditMode: true,
+    //   },
+    // });
+  }
+
+  function onToDoInputFocusHandler(
+    e: React.FocusEvent<HTMLInputElement>,
+    itemKey?: string
+  ) {
+    dispatch({
+      type: ActionType.UPDATE_EDIT_STATUS,
+      payload: {
+        todo: (e.target as HTMLInputElement).value,
+        itemKeyValue: itemKey,
+        isInEditMode: true,
+      },
+    });
+  }
+
+  function onToDoInputDefocusHandler(
+    e: React.FocusEvent<HTMLInputElement>,
+    itemKey?: string
+  ) {
+    dispatch({
+      type: ActionType.UPDATE_EDIT_STATUS,
+      payload: {
+        todo: (e.target as HTMLInputElement).value,
+        itemKeyValue: itemKey,
+        isInEditMode: false,
+      },
+    });
+  }
+
   useEffect(() => {
     console.log(state.todoList);
   }, [state]);
@@ -98,8 +142,12 @@ function App() {
         />
         <ToDoList
           todoList={todoList}
-          onButtonClick={deleteOrUpdateToDoItem}
+          onButtonClick={deleteTODOitem}
           onCheckBoxClick={onCheckBoxClick}
+          onInputChange={todoOnInputChange}
+          reference={inputRef}
+          onInputFocus={onToDoInputFocusHandler}
+          onInputDefocus={onToDoInputDefocusHandler}
         />
         <Button
           className="clear-btn"
