@@ -8,7 +8,6 @@ import { ActionType } from "./state/Actions";
 import Button from "./components/Button";
 import Stats from "./components/Stats";
 import { getCompletedToDosPercent } from "./shared/utils";
-import { stat } from "fs";
 
 function setUniqueKey() {
   let date = new Date();
@@ -84,22 +83,6 @@ function App() {
     });
   }
 
-  function todoOnInputChange(
-    e: React.ChangeEvent<HTMLInputElement>,
-    itemKey: string
-  ) {
-    const updatedTODOtext = (e.target as HTMLInputElement).value;
-
-    // dispatch({
-    //   type: ActionType.UPDATE_TODO_TEXT,
-    //   payload: {
-    //     todo: updatedTODOtext,
-    //     itemKeyValue: itemKey,
-    //     isInEditMode: true,
-    //   },
-    // });
-  }
-
   function onToDoInputFocusHandler(
     e: React.FocusEvent<HTMLInputElement>,
     itemKey?: string
@@ -167,7 +150,6 @@ function App() {
           todoList={todoList}
           onButtonClick={deleteTODOitem}
           onCheckBoxClick={onCheckBoxClick}
-          onInputChange={todoOnInputChange}
           onInputFocus={onToDoInputFocusHandler}
           onInputDefocus={onToDoInputDefocusHandler}
         />

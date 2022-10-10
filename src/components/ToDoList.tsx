@@ -23,18 +23,13 @@ type ToDoListProps = {
     e: React.MouseEvent<HTMLInputElement>,
     itemKey: string
   ) => void;
-
-  onInputChange: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    itemKey: string
-  ) => void;
 };
 
 function ToDoList({
   todoList,
   onButtonClick,
   onCheckBoxClick,
-  onInputChange,
+  // onInputChange,
   onInputFocus,
   onInputDefocus,
 }: ToDoListProps) {
@@ -57,11 +52,7 @@ function ToDoList({
             ) {
               onCheckBoxClick(e, key);
             }
-            function onInputChangeHandler(
-              e: React.ChangeEvent<HTMLInputElement>
-            ) {
-              onInputChange(e, key);
-            }
+
             function inputFocusHandler(e: React.FocusEvent<HTMLInputElement>) {
               onInputFocus(e, key);
             }
@@ -89,7 +80,6 @@ function ToDoList({
                   }
                   inputValue={toDoItemText}
                   inputDisabled={isCompleted ? true : false}
-                  onChange={onInputChangeHandler}
                   onFocus={inputFocusHandler}
                   onBlur={inputDefocusHandler}
                 />
