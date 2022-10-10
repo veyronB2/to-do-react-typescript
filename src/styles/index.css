@@ -153,3 +153,10 @@ ul {
 .todo-active {
   border: 2px solid var(--primary-blue);
 }
+
+.stats-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}

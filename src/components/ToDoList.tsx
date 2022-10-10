@@ -5,7 +5,6 @@ import Checkbox from "./Checkbox";
 
 type ToDoListProps = {
   todoList: { [key: string]: ToDoState };
-  reference: any;
   onInputDefocus: (
     e: React.FocusEvent<HTMLInputElement>,
     itemKey?: string
@@ -36,7 +35,6 @@ function ToDoList({
   onButtonClick,
   onCheckBoxClick,
   onInputChange,
-  reference,
   onInputFocus,
   onInputDefocus,
 }: ToDoListProps) {
@@ -81,7 +79,6 @@ function ToDoList({
                   isDisabled={isInEditMode ? true : false}
                 />
                 <Input
-                  reference={reference}
                   inputType="text"
                   className={
                     isCompleted

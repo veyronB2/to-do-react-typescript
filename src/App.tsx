@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useMemo } from "react";
 import ToDoForm from "./components/ToDoForm";
 import { INITIAL_STATE } from "./state/IninitalState";
 import ToDoList from "./components/ToDoList";
@@ -6,6 +6,9 @@ import React, { useEffect, useReducer, useState } from "react";
 import { reducer } from "./state/Reducer";
 import { ActionType } from "./state/Actions";
 import Button from "./components/Button";
+import Stats from "./components/Stats";
+import { getCompletedToDosPercent } from "./shared/utils";
+import { stat } from "fs";
 
 function setUniqueKey() {
   let date = new Date();
@@ -24,20 +27,22 @@ function App() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [formInputValue, setformInputValue] = useState<string>("");
   const [itemKeyValue, setitemKeyValue] = useState<string>("");
-  const { todoList } = state;
-  const inputRef = useRef<React.LegacyRef<HTMLInputElement>>(null);
+  const { todoList, todoCounter } = state;
 
   function formOnSubmitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    dispatch({
-      type: ActionType.ADD_TODO,
-      payload: {
-        todo: formInputValue,
-        isCompleted: false,
-        itemKeyValue: itemKeyValue,
-        isInEditMode: false,
-      },
-    });
+
+    if (formInputValue) {
+      dispatch({
+        type: ActionType.ADD_TODO,
+        payload: {
+          todo: formInputValue,
+          isCompleted: false,
+          itemKeyValue: itemKeyValue,
+          isInEditMode: false,
+        },
+      });
+    }
 
     (e.target as HTMLFormElement).reset();
     setformInputValue("");
@@ -123,8 +128,21 @@ function App() {
     });
   }
 
+  const counterToDo = state.todoCounter;
+  const todoCompletedCounter = state.todoCompletedCounter;
+  const todoUncompletedCounter = state.todoUncompletedCounter;
+  const { uncompletedRatio, completedRatio } = useMemo(
+    () =>
+      getCompletedToDosPercent({
+        counterToDo,
+        todoUncompletedCounter,
+        todoCompletedCounter,
+      }),
+    [counterToDo, todoCompletedCounter, todoUncompletedCounter]
+  );
+
   useEffect(() => {
-    console.log(state.todoList);
+    console.log(state);
   }, [state]);
 
   useEffect(() => {
@@ -135,6 +153,11 @@ function App() {
     <main>
       <section className="container">
         <h1>to do list</h1>
+        <Stats
+          todoCounter={todoCounter}
+          todoCompletedRatio={completedRatio}
+          todoUncompletedRatio={uncompletedRatio}
+        />
         <ToDoForm
           onSubmit={formOnSubmitHandler}
           onInputChange={formInputChangeHandler}
@@ -145,7 +168,6 @@ function App() {
           onButtonClick={deleteTODOitem}
           onCheckBoxClick={onCheckBoxClick}
           onInputChange={todoOnInputChange}
-          reference={inputRef}
           onInputFocus={onToDoInputFocusHandler}
           onInputDefocus={onToDoInputDefocusHandler}
         />

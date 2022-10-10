@@ -8,6 +8,9 @@ export type ToDoState = {
 
 export type UIState = {
   todoList: { [key: string]: ToDoState };
+  todoCounter: number;
+  todoCompletedCounter: number;
+  todoUncompletedCounter: number;
 };
 
 export type Payload = {

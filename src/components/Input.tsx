@@ -6,7 +6,6 @@ export type InputProps = {
   inputValue?: string;
   placeHolder?: string;
   inputDisabled?: boolean;
-  reference?: React.LegacyRef<HTMLInputElement>;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -20,14 +19,12 @@ function Input({
   onChange,
   inputValue,
   inputDisabled,
-  reference,
   onFocus,
   onBlur,
 }: InputProps) {
   return (
     <>
       <input
-        ref={reference}
         type={inputType}
         className={className}
         placeholder={placeHolder}
