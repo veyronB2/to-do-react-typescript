@@ -3,13 +3,15 @@ type statsProps = {
   todoCompletedRatio: string;
   todoUncompletedRatio: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  selectValue: string;
 };
 
-function Stats({
+function StatsAndFilter({
   todoCounter,
   todoCompletedRatio,
   todoUncompletedRatio,
   onChange,
+  selectValue,
 }: statsProps) {
   return (
     <div className="stats-container">
@@ -24,8 +26,14 @@ function Stats({
         Uncompleted:
         <span id="uncompleted-todo-ratio">{todoUncompletedRatio}</span>
       </p>
-      <select name="todo-filter" className="todo-filter" onChange={onChange}>
-        <option value="all">All</option>
+
+      <select
+        value={selectValue}
+        name="todo-filter"
+        className="todo-filter"
+        onChange={onChange}
+      >
+        <option value="default">All</option>
         <option value="completed">completed</option>
         <option value="uncompleted">uncompleted</option>
       </select>
@@ -33,4 +41,4 @@ function Stats({
   );
 }
 
-export default Stats;
+export default StatsAndFilter;

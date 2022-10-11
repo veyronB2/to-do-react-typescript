@@ -6,7 +6,7 @@ import React, { useEffect, useReducer, useState } from "react";
 import { reducer } from "./state/Reducer";
 import { ActionType } from "./state/Actions";
 import Button from "./components/Button";
-import Stats from "./components/StatsAndFilter";
+import StatsAndFilter from "./components/StatsAndFilter";
 import { getCompletedToDosPercent } from "./shared/utils";
 
 function setUniqueKey() {
@@ -26,7 +26,7 @@ function App() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [formInputValue, setformInputValue] = useState<string>("");
   const [itemKeyValue, setitemKeyValue] = useState<string>("");
-  const { todoList, todoCounter, filteredtodoList } = state;
+  const { todoList, todoCounter, filteredtodoList, currentFilter } = state;
 
   function formOnSubmitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -163,11 +163,12 @@ function App() {
     <main>
       <section className="container">
         <h1>to do list</h1>
-        <Stats
+        <StatsAndFilter
           todoCounter={todoCounter}
           todoCompletedRatio={completedRatio}
           todoUncompletedRatio={uncompletedRatio}
           onChange={onFilterChange}
+          selectValue={currentFilter}
         />
         <ToDoForm
           onSubmit={formOnSubmitHandler}
