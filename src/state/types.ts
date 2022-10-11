@@ -8,9 +8,11 @@ export type ToDoState = {
 
 export type UIState = {
   todoList: { [key: string]: ToDoState };
+  filteredtodoList: { [key: string]: ToDoState };
   todoCounter: number;
   todoCompletedCounter: number;
   todoUncompletedCounter: number;
+  currentFilter: string;
 };
 
 export type Payload = {
@@ -18,6 +20,7 @@ export type Payload = {
   isCompleted?: boolean;
   itemKeyValue?: string;
   isInEditMode?: boolean;
+  filter?: boolean | string;
 };
 
 export type Action = {

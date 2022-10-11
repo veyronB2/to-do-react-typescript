@@ -1,3 +1,4 @@
+import { ToDoState } from "../state/types";
 type statsProps = {
   counterToDo: number;
   todoUncompletedCounter: number;
@@ -29,4 +30,26 @@ export function getCompletedToDosPercent({
     uncompletedRatio,
     completedRatio,
   };
+}
+
+type FilterProps = {
+  todoList: { [key: string]: ToDoState };
+  filter: boolean | string;
+};
+export function getFilteredTODOs({ todoList, filter }: FilterProps) {
+  const list = Object.entries(todoList);
+  let tempFilter: boolean = false;
+
+  if (filter === "completed") {
+    tempFilter = true;
+  }
+
+  if (filter !== "all") {
+    const filteredList = Object.fromEntries(
+      list.filter(function ([key, value]) {
+        return value.isCompleted === tempFilter;
+      })
+    );
+    return filteredList;
+  } else return todoList;
 }

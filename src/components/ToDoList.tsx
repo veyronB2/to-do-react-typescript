@@ -29,7 +29,6 @@ function ToDoList({
   todoList,
   onButtonClick,
   onCheckBoxClick,
-  // onInputChange,
   onInputFocus,
   onInputDefocus,
 }: ToDoListProps) {
@@ -68,6 +67,7 @@ function ToDoList({
                   className="todo-checkbox"
                   onClick={checkBoxClickHandler}
                   isDisabled={isInEditMode ? true : false}
+                  isChecked={isCompleted}
                 />
                 <Input
                   inputType="text"

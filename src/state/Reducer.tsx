@@ -1,7 +1,7 @@
-import { UIState } from "./types";
-import { Action } from "./types";
+import { UIState, Action } from "./types";
 import { ActionType } from "./Actions";
 import { INITIAL_STATE } from "./IninitalState";
+import { getFilteredTODOs } from "../shared/utils";
 
 export const reducer = (state: UIState, action: Action): UIState => {
   const { payload } = action;
@@ -12,8 +12,20 @@ export const reducer = (state: UIState, action: Action): UIState => {
     [ActionType.COMPLETE_TODO]: toggleCompleted,
     [ActionType.UPDATE_TODO_TEXT]: updateTODOtext,
     [ActionType.UPDATE_EDIT_STATUS]: updateEditState,
+    [ActionType.FILTER_TODOS]: filterTODOs,
   };
   return actionsMap[action.type] ? actionsMap[action.type]() : state;
+
+  function filterTODOs() {
+    return {
+      ...state,
+      currentFilter: payload?.filter,
+      filteredtodoList: getFilteredTODOs({
+        todoList: state.todoList,
+        filter: payload?.filter || false,
+      }),
+    };
+  }
 
   function updateEditState() {
     return {

@@ -6,7 +6,7 @@ import React, { useEffect, useReducer, useState } from "react";
 import { reducer } from "./state/Reducer";
 import { ActionType } from "./state/Actions";
 import Button from "./components/Button";
-import Stats from "./components/Stats";
+import Stats from "./components/StatsAndFilter";
 import { getCompletedToDosPercent } from "./shared/utils";
 
 function setUniqueKey() {
@@ -26,7 +26,7 @@ function App() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [formInputValue, setformInputValue] = useState<string>("");
   const [itemKeyValue, setitemKeyValue] = useState<string>("");
-  const { todoList, todoCounter } = state;
+  const { todoList, todoCounter, filteredtodoList } = state;
 
   function formOnSubmitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -124,9 +124,36 @@ function App() {
     [counterToDo, todoCompletedCounter, todoUncompletedCounter]
   );
 
+  function onFilterChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const selectedFilter = (
+      e.target as HTMLSelectElement
+    ).value.toLocaleLowerCase();
+
+    dispatch({
+      type: ActionType.FILTER_TODOS,
+      payload: {
+        filter: selectedFilter,
+      },
+    });
+  }
+
   useEffect(() => {
-    console.log(state);
-  }, [state]);
+    dispatch({
+      type: ActionType.FILTER_TODOS,
+      payload: {
+        filter: state.currentFilter,
+      },
+    });
+  }, [
+    state.currentFilter,
+    state.todoCompletedCounter,
+    state.todoUncompletedCounter,
+    state.todoCounter,
+  ]);
+
+  // useEffect(() => {
+  //   // console.log(state);
+  // }, [state]);
 
   useEffect(() => {
     setitemKeyValue(setUniqueKey());
@@ -140,6 +167,7 @@ function App() {
           todoCounter={todoCounter}
           todoCompletedRatio={completedRatio}
           todoUncompletedRatio={uncompletedRatio}
+          onChange={onFilterChange}
         />
         <ToDoForm
           onSubmit={formOnSubmitHandler}
@@ -147,7 +175,7 @@ function App() {
           inputValue={formInputValue}
         />
         <ToDoList
-          todoList={todoList}
+          todoList={state.currentFilter === "all" ? todoList : filteredtodoList}
           onButtonClick={deleteTODOitem}
           onCheckBoxClick={onCheckBoxClick}
           onInputFocus={onToDoInputFocusHandler}
