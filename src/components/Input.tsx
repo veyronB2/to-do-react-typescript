@@ -6,10 +6,11 @@ export type InputProps = {
   inputValue?: string;
   placeHolder?: string;
   inputDisabled?: boolean;
+  itemKey?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
-  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>, itemKey?: string) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>, itemKey?: string) => void;
 };
 
 function Input({
@@ -21,7 +22,14 @@ function Input({
   inputDisabled,
   onFocus,
   onBlur,
+  itemKey,
 }: InputProps) {
+  function onFocusHandler(e: React.FocusEvent<HTMLInputElement>) {
+    onFocus?.(e, itemKey);
+  }
+  function onBlurHandler(e: React.FocusEvent<HTMLInputElement>) {
+    onBlur?.(e, itemKey);
+  }
   return (
     <>
       <input
@@ -31,8 +39,8 @@ function Input({
         defaultValue={inputValue}
         onChange={onChange}
         disabled={inputDisabled}
-        onFocus={onFocus}
-        onBlur={onBlur}
+        onFocus={onFocusHandler}
+        onBlur={onBlurHandler}
       />
     </>
   );

@@ -21,7 +21,7 @@ type ToDoListProps = {
 
   onCheckBoxClick: (
     e: React.MouseEvent<HTMLInputElement>,
-    itemKey: string
+    itemKey?: string
   ) => void;
 };
 
@@ -32,6 +32,34 @@ function ToDoList({
   onInputFocus,
   onInputDefocus,
 }: ToDoListProps) {
+  function buttonClickHandler(
+    e: React.MouseEvent<HTMLButtonElement>,
+    itemKey?: string
+  ) {
+    onButtonClick(e, itemKey);
+  }
+
+  function checkBoxClickHandler(
+    e: React.MouseEvent<HTMLInputElement>,
+    itemKey?: string
+  ) {
+    onCheckBoxClick(e, itemKey);
+  }
+
+  function inputFocusHandler(
+    e: React.FocusEvent<HTMLInputElement>,
+    itemKey?: string
+  ) {
+    onInputFocus(e, itemKey);
+  }
+
+  function inputDefocusHandler(
+    e: React.FocusEvent<HTMLInputElement>,
+    itemKey?: string
+  ) {
+    onInputDefocus(e, itemKey);
+  }
+
   return (
     <ul className="todo-list">
       {Object.keys(todoList).length === 0 ? (
@@ -41,26 +69,6 @@ function ToDoList({
           {Object.keys(todoList).map((key) => {
             const { isCompleted, toDoItemText, isInEditMode } = todoList[key];
 
-            function buttonClickHandler(
-              e: React.MouseEvent<HTMLButtonElement>
-            ) {
-              onButtonClick(e, key);
-            }
-            function checkBoxClickHandler(
-              e: React.MouseEvent<HTMLInputElement>
-            ) {
-              onCheckBoxClick(e, key);
-            }
-
-            function inputFocusHandler(e: React.FocusEvent<HTMLInputElement>) {
-              onInputFocus(e, key);
-            }
-            function inputDefocusHandler(
-              e: React.FocusEvent<HTMLInputElement>
-            ) {
-              onInputDefocus(e, key);
-            }
-
             return (
               <li key={key} className="todo-item">
                 <Checkbox
@@ -68,6 +76,7 @@ function ToDoList({
                   onClick={checkBoxClickHandler}
                   isDisabled={isInEditMode ? true : false}
                   isChecked={isCompleted}
+                  itemKey={key}
                 />
                 <Input
                   inputType="text"
@@ -82,6 +91,7 @@ function ToDoList({
                   inputDisabled={isCompleted ? true : false}
                   onFocus={inputFocusHandler}
                   onBlur={inputDefocusHandler}
+                  itemKey={key}
                 />
                 {isInEditMode && <Button className="todo-btn" btnText="Save" />}
                 {!isInEditMode && (
@@ -89,6 +99,7 @@ function ToDoList({
                     className="todo-btn"
                     btnText="Delete"
                     onClick={buttonClickHandler}
+                    itemKey={key}
                   />
                 )}
               </li>

@@ -68,7 +68,7 @@ function App() {
 
   function onCheckBoxClick(
     e: React.MouseEvent<HTMLInputElement>,
-    itemKey: string
+    itemKey?: string
   ) {
     const isChecked = (e.target as HTMLInputElement).checked;
     dispatch({
@@ -107,6 +107,12 @@ function App() {
         todo: (e.target as HTMLInputElement).value,
         itemKeyValue: itemKey,
         isInEditMode: false,
+      },
+    });
+    dispatch({
+      type: ActionType.FILTER_TODOS,
+      payload: {
+        filter: state.currentFilter,
       },
     });
   }
@@ -151,9 +157,9 @@ function App() {
     state.todoCounter,
   ]);
 
-  // useEffect(() => {
-  //   // console.log(state);
-  // }, [state]);
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
 
   useEffect(() => {
     setitemKeyValue(setUniqueKey());

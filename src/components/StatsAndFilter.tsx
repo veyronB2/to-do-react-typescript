@@ -33,7 +33,7 @@ function StatsAndFilter({
         className="todo-filter"
         onChange={onChange}
       >
-        <option value="default">All</option>
+        <option value="all">All</option>
         <option value="completed">completed</option>
         <option value="uncompleted">uncompleted</option>
       </select>

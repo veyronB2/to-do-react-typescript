@@ -160,3 +160,7 @@ ul {
   margin-bottom: 1rem;
   font-size: 1.2rem;
 }
+
+.todo-filter {
+  border: 2px solid var(--primary-blue);
+}
