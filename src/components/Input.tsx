@@ -1,16 +1,14 @@
 import React from "react";
-
 export type InputProps = {
   inputType: string;
   className: string;
-  inputValue?: string;
+  userInput?: string;
   placeHolder?: string;
   inputDisabled?: boolean;
-  itemKey?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
-  onFocus?: (e: React.FocusEvent<HTMLInputElement>, itemKey?: string) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>, itemKey?: string) => void;
+  onFocus?: () => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 
 function Input({
@@ -18,17 +16,14 @@ function Input({
   className,
   placeHolder,
   onChange,
-  inputValue,
+  userInput,
   inputDisabled,
   onFocus,
   onBlur,
-  itemKey,
+  onClick,
 }: InputProps) {
-  function onFocusHandler(e: React.FocusEvent<HTMLInputElement>) {
-    onFocus?.(e, itemKey);
-  }
-  function onBlurHandler(e: React.FocusEvent<HTMLInputElement>) {
-    onBlur?.(e, itemKey);
+  function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
+    onChange?.(e);
   }
   return (
     <>
@@ -36,11 +31,12 @@ function Input({
         type={inputType}
         className={className}
         placeholder={placeHolder}
-        defaultValue={inputValue}
-        onChange={onChange}
+        value={userInput}
+        onChange={handleOnChange}
         disabled={inputDisabled}
-        onFocus={onFocusHandler}
-        onBlur={onBlurHandler}
+        onFocus={onFocus}
+        onBlur={(e) => onBlur?.(e)}
+        onClick={onClick}
       />
     </>
   );

@@ -3,13 +3,12 @@ import React from "react";
 type ButtonProps = {
   className: string;
   btnText: string;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>, itemKey?: string) => void;
-  itemKey?: string;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-function Button({ className, btnText, onClick, itemKey }: ButtonProps) {
+function Button({ className, btnText, onClick }: ButtonProps) {
   function clickHandler(e: React.MouseEvent<HTMLButtonElement>) {
-    onClick?.(e, itemKey);
+    onClick?.(e);
   }
   return (
     <button className={className} onClick={clickHandler}>

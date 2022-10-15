@@ -2,70 +2,60 @@ import { ToDoState } from "../state/types";
 import Button from "./Button";
 import Input from "./Input";
 import Checkbox from "./Checkbox";
+import { useCallback } from "react";
 
 type ToDoListProps = {
   todoList: { [key: string]: ToDoState };
-  onInputDefocus: (
-    e: React.FocusEvent<HTMLInputElement>,
-    itemKey?: string
-  ) => void;
 
-  onInputFocus: (
-    e: React.FocusEvent<HTMLInputElement>,
-    itemKey?: string
-  ) => void;
-  onButtonClick: (
-    e?: React.MouseEvent<HTMLButtonElement>,
-    itemKey?: string
-  ) => void;
+  onFocusOut: (e: React.FocusEvent<HTMLInputElement>, itemKey?: string) => void;
 
-  onCheckBoxClick: (
-    e: React.MouseEvent<HTMLInputElement>,
-    itemKey?: string
-  ) => void;
+  onFocus: (itemKey?: string) => void;
+  onButtonClick: (itemKey?: string) => void;
+
+  onCheckBoxClick: (itemKey?: string) => void;
 };
 
 function ToDoList({
   todoList,
   onButtonClick,
   onCheckBoxClick,
-  onInputFocus,
-  onInputDefocus,
+  onFocus,
+  onFocusOut,
 }: ToDoListProps) {
-  function buttonClickHandler(
-    e: React.MouseEvent<HTMLButtonElement>,
-    itemKey?: string
-  ) {
-    onButtonClick(e, itemKey);
-  }
+  const handleButtonClick = useCallback(
+    (itemKey?: string) => {
+      onButtonClick(itemKey);
+    },
+    [onButtonClick]
+  );
 
-  function checkBoxClickHandler(
-    e: React.MouseEvent<HTMLInputElement>,
-    itemKey?: string
-  ) {
-    onCheckBoxClick(e, itemKey);
-  }
+  const handleCheckBoxClick = useCallback(
+    (itemKey?: string) => {
+      onCheckBoxClick(itemKey);
+    },
+    [onCheckBoxClick]
+  );
 
-  function inputFocusHandler(
-    e: React.FocusEvent<HTMLInputElement>,
-    itemKey?: string
-  ) {
-    onInputFocus(e, itemKey);
-  }
+  const handleOnFocus = useCallback(
+    (itemKey?: string) => {
+      onFocus(itemKey);
+    },
+    [onFocus]
+  );
 
-  function inputDefocusHandler(
-    e: React.FocusEvent<HTMLInputElement>,
-    itemKey?: string
-  ) {
-    onInputDefocus(e, itemKey);
-  }
+  const handleOnFocusOut = useCallback(
+    (e: React.FocusEvent<HTMLInputElement>, itemKey: string) => {
+      onFocusOut(e, itemKey);
+    },
+    [onFocusOut]
+  );
 
   return (
     <ul className="todo-list">
       {Object.keys(todoList).length === 0 ? (
         <li className="no-todos">No ToDos...</li>
       ) : (
-        <ul>
+        <>
           {Object.keys(todoList).map((key) => {
             const { isCompleted, toDoItemText, isInEditMode } = todoList[key];
 
@@ -73,10 +63,9 @@ function ToDoList({
               <li key={key} className="todo-item">
                 <Checkbox
                   className="todo-checkbox"
-                  onClick={checkBoxClickHandler}
+                  onClick={() => handleCheckBoxClick(key)}
                   isDisabled={isInEditMode ? true : false}
                   isChecked={isCompleted}
-                  itemKey={key}
                 />
                 <Input
                   inputType="text"
@@ -87,25 +76,20 @@ function ToDoList({
                       ? "todo-input todo-active"
                       : "todo-input"
                   }
-                  inputValue={toDoItemText}
+                  userInput={toDoItemText}
                   inputDisabled={isCompleted ? true : false}
-                  onFocus={inputFocusHandler}
-                  onBlur={inputDefocusHandler}
-                  itemKey={key}
+                  onFocus={() => handleOnFocus(key)}
+                  onBlur={(e) => handleOnFocusOut(e, key)}
                 />
-                {isInEditMode && <Button className="todo-btn" btnText="Save" />}
-                {!isInEditMode && (
-                  <Button
-                    className="todo-btn"
-                    btnText="Delete"
-                    onClick={buttonClickHandler}
-                    itemKey={key}
-                  />
-                )}
+                <Button
+                  className="todo-btn"
+                  btnText="Delete"
+                  onClick={() => handleButtonClick(key)}
+                />
               </li>
             );
           })}
-        </ul>
+        </>
       )}
     </ul>
   );

@@ -53,3 +53,16 @@ export function getFilteredTODOs({ todoList, filter }: FilterProps) {
     return filteredList;
   } else return todoList;
 }
+
+export function getUniqueKey() {
+  let date = new Date();
+  date.toLocaleString("en-US", {
+    dateStyle: "medium",
+    timeStyle: "full",
+    hour12: false,
+  });
+  let key = `${date.getDay()}${
+    date.getMonth() + 1
+  }${date.getFullYear()}_${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
+  return key;
+}

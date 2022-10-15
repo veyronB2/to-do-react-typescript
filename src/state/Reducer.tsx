@@ -1,6 +1,6 @@
 import { UIState, Action } from "./types";
 import { ActionType } from "./Actions";
-import { INITIAL_STATE } from "./IninitalState";
+import { INITIAL_STATE } from "./InitialState";
 import { getFilteredTODOs } from "../shared/utils";
 
 export const reducer = (state: UIState, action: Action): UIState => {
@@ -12,18 +12,26 @@ export const reducer = (state: UIState, action: Action): UIState => {
     [ActionType.COMPLETE_TODO]: toggleCompleted,
     [ActionType.UPDATE_TODO_TEXT]: updateTODOtext,
     [ActionType.UPDATE_EDIT_STATUS]: updateEditState,
-    [ActionType.FILTER_TODOS]: filterTODOs,
+    [ActionType.UPDATE_FILTER]: updateFilter,
+    [ActionType.FILTER_TODOS]: getFilteredToDos,
   };
   return actionsMap[action.type] ? actionsMap[action.type]() : state;
 
-  function filterTODOs() {
+  function getFilteredToDos() {
     return {
       ...state,
       currentFilter: payload?.filter,
-      filteredtodoList: getFilteredTODOs({
+      filteredToDoList: getFilteredTODOs({
         todoList: state.todoList,
-        filter: payload?.filter || false,
+        filter: payload?.filter!,
       }),
+    };
+  }
+
+  function updateFilter() {
+    return {
+      ...state,
+      currentFilter: payload?.filter,
     };
   }
 
@@ -32,8 +40,16 @@ export const reducer = (state: UIState, action: Action): UIState => {
       ...state,
       todoList: {
         ...state.todoList,
-        [`${payload?.itemKeyValue}`]: {
-          ...state.todoList[`${payload?.itemKeyValue}`],
+        [`${payload?.itemKey}`]: {
+          ...state.todoList[`${payload?.itemKey}`],
+          isInEditMode: payload?.isInEditMode,
+          toDoItemText: payload?.todo,
+        },
+      },
+      filteredToDoList: {
+        ...state.filteredToDoList,
+        [`${payload?.itemKey}`]: {
+          ...state.todoList[`${payload?.itemKey}`],
           isInEditMode: payload?.isInEditMode,
           toDoItemText: payload?.todo,
         },
@@ -46,7 +62,7 @@ export const reducer = (state: UIState, action: Action): UIState => {
       ...state,
       todoList: {
         ...state.todoList,
-        [`${payload?.itemKeyValue}`]: {
+        [`${payload?.itemKey}`]: {
           toDoItemText: payload?.todo,
         },
       },
@@ -64,7 +80,7 @@ export const reducer = (state: UIState, action: Action): UIState => {
       todoUncompletedCounter: todoUncompletedCounter,
       todoList: {
         ...state.todoList,
-        [`${payload?.itemKeyValue}`]: {
+        [`${payload?.itemKey}`]: {
           toDoItemText: payload?.todo,
           isCompleted: payload?.isCompleted,
           isInEditMode: payload?.isInEditMode,
@@ -75,7 +91,7 @@ export const reducer = (state: UIState, action: Action): UIState => {
 
   function deleteToDo() {
     const list = { ...state.todoList };
-    const isCompleted = list[payload?.itemKeyValue!].isCompleted;
+    const isCompleted = list[payload?.itemKey!].isCompleted;
     let counter: number = state.todoCounter;
     let completedCounter: number = state.todoCompletedCounter;
     let uncompletedCounter: number = state.todoUncompletedCounter;
@@ -84,7 +100,7 @@ export const reducer = (state: UIState, action: Action): UIState => {
 
     isCompleted ? completedCounter-- : uncompletedCounter--;
 
-    delete list[payload?.itemKeyValue!];
+    delete list[payload?.itemKey!];
     return {
       ...state,
       todoCounter: counter,
@@ -112,8 +128,8 @@ export const reducer = (state: UIState, action: Action): UIState => {
       todoUncompletedCounter: todoUncompletedCounter,
       todoList: {
         ...state.todoList,
-        [`${payload?.itemKeyValue}`]: {
-          ...state.todoList[`${payload?.itemKeyValue}`],
+        [`${payload?.itemKey}`]: {
+          ...state.todoList[`${payload?.itemKey}`],
           isCompleted: payload?.isCompleted,
         },
       },
