@@ -10,9 +10,9 @@ export const reducer = (state: UIState, action: Action): UIState => {
     [ActionType.ADD_TODO]: addNewToDo,
     [ActionType.DELETE_TODO]: deleteToDo,
     [ActionType.COMPLETE_TODO]: toggleCompleted,
-    [ActionType.UPDATE_TODO_TEXT]: updateTODOtext,
-    [ActionType.UPDATE_EDIT_STATUS]: updateEditState,
-    [ActionType.UPDATE_FILTER]: updateFilter,
+    [ActionType.UPDATE_TODO_TEXT]: updateToDoText,
+    [ActionType.UPDATE_EDIT_STATUS]: updateIsEditableStatus,
+    [ActionType.UPDATE_FILTER]: updateCurrentFilter,
     [ActionType.FILTER_TODOS]: getFilteredToDos,
   };
   return actionsMap[action.type] ? actionsMap[action.type]() : state;
@@ -28,14 +28,14 @@ export const reducer = (state: UIState, action: Action): UIState => {
     };
   }
 
-  function updateFilter() {
+  function updateCurrentFilter() {
     return {
       ...state,
       currentFilter: payload?.filter,
     };
   }
 
-  function updateEditState() {
+  function updateIsEditableStatus() {
     return {
       ...state,
       todoList: {
@@ -57,7 +57,7 @@ export const reducer = (state: UIState, action: Action): UIState => {
     };
   }
 
-  function updateTODOtext() {
+  function updateToDoText() {
     return {
       ...state,
       todoList: {
